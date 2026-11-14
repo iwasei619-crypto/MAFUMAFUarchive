@@ -1,0 +1,760 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MAFUMAFU ARCHIVE</title>
+
+<style>
+/* 基本設定 */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: #faf8fb;
+    color: #403847;
+    font-family: "Hiragino Kaku Gothic ProN",
+                 "Yu Gothic", sans-serif;
+}
+
+/* ヘッダー */
+header {
+    padding: 28px 7%;
+    background: #eee5f1;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+/* メイン */
+main {
+    max-width: 1100px;
+    margin: auto;
+    padding: 45px 25px;
+}
+
+h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.description {
+    color: #8c8190;
+    margin-bottom: 30px;
+}
+
+/* 検索欄 */
+.search-box {
+    display: flex;
+    align-items: center;
+    background: white;
+    border: 1px solid #e5dce8;
+    border-radius: 30px;
+    padding: 14px 20px;
+    margin-bottom: 40px;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 15px;
+    background: transparent;
+}
+
+.search-box span {
+    margin-right: 10px;
+}
+/* 検索条件パネル */
+.search-container {
+    position: relative;
+    max-width: 650px;
+    margin-bottom: 40px;
+}
+
+.search-container .search-box {
+    margin-bottom: 0;
+}
+
+.search-options {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: white;
+    border: 1px solid #e5dce8;
+    border-radius: 0 0 14px 14px;
+    padding: 20px;
+    box-shadow: 0 5px 15px rgba(64, 56, 71, 0.10);
+    z-index: 10;
+}
+
+.search-container.is-open .search-options {
+    display: block;
+}
+
+.search-options-title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 15px;
+}
+
+.search-options-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px 12px;
+}
+
+.search-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.search-options input[type="checkbox"] {
+    accent-color: #a88bb5;
+    cursor: pointer;
+}
+
+@media (max-width: 500px) {
+    .search-options-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* 見出し */
+.section-title {
+    font-size: 21px;
+    margin-bottom: 20px;
+}
+
+/* カード一覧 */
+.album-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+.album-card {
+    border: none;
+    padding: 0;
+    background: transparent;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.album-card img,
+.album-placeholder {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 13px;
+    background: #e8dce9;
+}
+
+.album-placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #89768f;
+    font-size: 13px;
+    text-align: center;
+    padding: 10px;
+}
+
+.album-card h3 {
+    font-size: 15px;
+    margin: 10px 0 4px;
+}
+
+.album-card p {
+    font-size: 12px;
+    color: #918694;
+    margin: 0;
+}
+
+.album-card:hover {
+    opacity: 0.75;
+}
+
+/* 楽曲一覧 */
+.song-section {
+    margin-top: 55px;
+    background: white;
+    padding: 25px;
+    border-radius: 16px;
+}
+
+.song-item {
+    padding: 16px 0;
+    border-bottom: 1px solid #eee9f0;
+}
+
+.song-item:last-child {
+    border-bottom: none;
+}
+
+.song-item h3 {
+    font-size: 16px;
+    margin: 0 0 6px;
+}
+
+.song-item p {
+    font-size: 12px;
+    color: #8e8491;
+    margin: 4px 0;
+}
+
+.song-item a {
+    display: inline-block;
+    margin-top: 6px;
+    color: #9876a2;
+    font-size: 12px;
+}
+
+/* メッセージ */
+.message {
+    color: #988e9b;
+    font-size: 14px;
+    padding: 25px 0;
+}
+
+.file-area {
+    margin-top: 35px;
+    padding: 20px;
+    background: #f1ebf3;
+    border-radius: 14px;
+}
+
+.file-area p {
+    font-size: 13px;
+    color: #766b7b;
+}
+
+.file-area input {
+    max-width: 100%;
+}
+
+@media (max-width: 700px) {
+    .album-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+    }
+
+    main {
+        padding: 30px 18px;
+    }
+
+    header {
+        padding: 22px 20px;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">MAFUMAFU ARCHIVE</div>
+</header>
+
+<main>
+
+    <h1>Music Library</h1>
+    <p class="description">
+        これまでの記録を、ひとつずつ。
+    </p>
+
+   <!-- 検索欄 -->
+<div class="search-container" id="searchContainer">
+
+    <div class="search-box">
+        <span>⌕</span>
+        <input
+            type="search"
+            id="searchInput"
+            placeholder="楽曲名・作曲者・歌唱者などで検索..."
+            autocomplete="off"
+        >
+    </div>
+
+    <!-- 検索条件 -->
+    <div class="search-options" id="searchOptions">
+
+        <div class="search-options-title">
+            検索条件
+        </div>
+
+        <div class="search-options-grid">
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="楽曲名" checked>
+                楽曲名
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="タイトル" checked>
+                タイトル
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="作曲家" checked>
+                作曲者
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="作詞家" checked>
+                作詞者
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="歌唱者" checked>
+                歌唱者
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="制作年" checked>
+                制作年
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="歌唱年" checked>
+                歌唱年
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="区分" checked>
+                区分
+            </label>
+
+            <label>
+                <input type="checkbox" class="search-field"
+                    value="原曲情報" checked>
+                原曲情報
+            </label>
+
+        </div>
+    </div>
+
+</div>
+
+    <!-- アルバム一覧 -->
+    <h2 class="section-title">Music Collection</h2>
+    <div id="albumGrid" class="album-grid">
+        <p class="message">
+            まずはCSVファイルを読み込んでください。
+        </p>
+    </div>
+
+    <!-- 楽曲一覧 -->
+    <section class="song-section" id="songSection">
+        <h2 class="section-title">Song List</h2>
+        <div id="songList">
+            <p class="message">
+                アルバムを選択すると楽曲が表示されます。
+            </p>
+        </div>
+    </section>
+
+    <!-- CSV読み込み状況 -->
+<div class="file-area">
+    <strong>楽曲データ</strong>
+    <p id="loadStatus">楽曲データを読み込んでいます...</p>
+</div>
+</main>
+
+<script>
+
+// 読み込んだ楽曲データ
+let songs = [];
+
+// 選択中のアルバム
+let selectedGroup = null;
+
+// GitHub上のCSVを自動で読み込む
+async function loadCSV() {
+
+    const csvURL =
+        "https://raw.githubusercontent.com/iwasei619-crypto/MAFUMAFUarchive/main/song.csv";
+
+    const status = document.getElementById("loadStatus");
+
+    try {
+
+        status.textContent = "楽曲データを読み込んでいます...";
+
+        const response = await fetch(csvURL + "?v=" + Date.now());
+
+        if (!response.ok) {
+            throw new Error("CSVファイルを取得できませんでした。");
+        }
+
+        const csvText = await response.text();
+
+        songs = parseCSV(csvText);
+
+        selectedGroup = null;
+
+        renderAlbums(songs);
+
+        document.getElementById("songList").innerHTML =
+            '<p class="message">アルバムを選択すると楽曲が表示されます。</p>';
+
+        status.textContent =
+            songs.length + "件の楽曲データを読み込みました。";
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.textContent =
+            "データを読み込めませんでした。GitHubのCSVの場所とファイル名を確認してください。";
+
+    }
+}
+
+
+// CSVを解析する
+function parseCSV(text) {
+
+    text = text.replace(/^\uFEFF/, "");
+
+    const lines = [];
+    let row = [];
+    let cell = "";
+    let quoted = false;
+
+    for (let i = 0; i < text.length; i++) {
+
+        const char = text[i];
+
+        if (char === '"') {
+
+            if (quoted && text[i + 1] === '"') {
+                cell += '"';
+                i++;
+            } else {
+                quoted = !quoted;
+            }
+
+        } else if (char === "," && !quoted) {
+
+            row.push(cell);
+            cell = "";
+
+        } else if ((char === "\n" || char === "\r") && !quoted) {
+
+            if (char === "\r" && text[i + 1] === "\n") i++;
+
+            row.push(cell);
+            lines.push(row);
+
+            row = [];
+            cell = "";
+
+        } else {
+
+            cell += char;
+
+        }
+    }
+
+    row.push(cell);
+
+    if (row.some(value => value.trim() !== "")) {
+        lines.push(row);
+    }
+
+    const headers = lines[0].map(value => value.trim());
+
+    return lines.slice(1).map(line => {
+
+        const item = {};
+
+        headers.forEach((header, index) => {
+            item[header] = (line[index] || "").trim();
+        });
+
+        return item;
+
+    });
+}
+
+
+// グループ名を作る
+function getGroupInfo(song) {
+
+    const type = song["歌唱形態"] || "その他";
+    const title = song["タイトル"] || "タイトル未登録";
+
+    // 歌ってみたは年ごとにまとめる
+    if (type.includes("歌ってみた") || type.toLowerCase().includes("cover")) {
+
+        const year = song["歌唱年"] || "年不明";
+
+        return {
+            key: "cover-" + year,
+            name: "歌ってみた " + year,
+            type: "COVER"
+        };
+    }
+
+    // その他はタイトルごとにまとめる
+    return {
+        key: type + "-" + title,
+        name: title,
+        type: type
+    };
+}
+
+
+// アルバムカードを表示
+function renderAlbums(data) {
+
+    const grid = document.getElementById("albumGrid");
+
+    const groups = new Map();
+
+    data.forEach(song => {
+
+        const group = getGroupInfo(song);
+
+        if (!groups.has(group.key)) {
+            groups.set(group.key, {
+                ...group,
+                songs: []
+            });
+        }
+
+        groups.get(group.key).songs.push(song);
+
+    });
+
+    grid.innerHTML = "";
+
+    if (groups.size === 0) {
+        grid.innerHTML =
+            '<p class="message">該当するデータがありません。</p>';
+        return;
+    }
+
+    groups.forEach(group => {
+
+        const imageUrl = group.songs
+    .map(song => song["サムネイルURL"])
+    .find(url => /^https?:\/\//i.test(url));
+
+        const card = document.createElement("button");
+
+        card.className = "album-card";
+
+        const image = imageUrl
+            ? `<img src="${escapeHTML(imageUrl)}" alt="">`
+            : `<div class="album-placeholder">${escapeHTML(group.type)}</div>`;
+
+        card.innerHTML = `
+            ${image}
+            <h3>${escapeHTML(group.name)}</h3>
+            <p>${group.songs.length}曲</p>
+        `;
+
+      card.addEventListener("click", function() {
+
+    selectedGroup = group.key;
+
+    // このカードにまとめられた楽曲をそのまま表示
+    renderSongs(
+        group.songs,
+        group.name
+    );
+
+});
+
+        grid.appendChild(card);
+
+    });
+}
+
+
+// 楽曲一覧を表示
+function renderSongs(data, title) {
+
+    const list = document.getElementById("songList");
+
+    document.getElementById("songSection").scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+    });
+
+    list.innerHTML = `
+        <h3>${escapeHTML(title)}</h3>
+    `;
+
+    if (data.length === 0) {
+        list.innerHTML += '<p class="message">楽曲がありません。</p>';
+        return;
+    }
+
+    data.forEach(song => {
+
+        const item = document.createElement("div");
+
+        item.className = "song-item";
+
+        const url = safeURL(song["URL"]);
+
+        item.innerHTML = `
+            <h3>${escapeHTML(song["楽曲名"])}</h3>
+            <p>作曲：${escapeHTML(song["作曲家"])}</p>
+            <p>作詞：${escapeHTML(song["作詞家"])}</p>
+            <p>歌唱：${escapeHTML(song["歌唱"])}</p>
+            <p>制作年：${escapeHTML(song["制作年"])}
+               ／ 歌唱日：${escapeHTML(song["歌唱日"] || song["歌唱年"])}</p>
+            <p>${escapeHTML(song["原曲情報"])}</p>
+            ${url ? `<a href="${escapeHTML(url)}" target="_blank" rel="noopener noreferrer">関連ページを見る ↗</a>` : ""}
+        `;
+
+        list.appendChild(item);
+
+    });
+}
+// 検索機能
+const searchInput = document.getElementById("searchInput");
+const searchContainer = document.getElementById("searchContainer");
+
+// 検索窓をクリックすると検索条件を開く
+searchInput.addEventListener("focus", function() {
+    searchContainer.classList.add("is-open");
+});
+
+// チェックされている検索項目を取得
+function getSearchFields() {
+    return Array.from(
+        document.querySelectorAll(".search-field:checked")
+    ).map(input => input.value);
+}
+
+// 検索を実行
+function filterSongs() {
+
+    const keyword = searchInput.value.toLowerCase().trim();
+    const searchFields = getSearchFields();
+
+    // キーワードが空なら全曲を表示
+    if (keyword === "") {
+
+        selectedGroup = null;
+
+        renderAlbums(songs);
+
+        document.getElementById("songList").innerHTML =
+            '<p class="message">アルバムを選択すると楽曲が表示されます。</p>';
+
+        return;
+    }
+
+    // 検索対象が選択されていない場合
+    if (searchFields.length === 0) {
+
+        document.getElementById("albumGrid").innerHTML =
+            '<p class="message">検索条件を1つ以上選択してください。</p>';
+
+        document.getElementById("songList").innerHTML = "";
+
+        return;
+    }
+
+    // 選択された項目だけを検索する
+    const filtered = songs.filter(song => {
+
+        const searchable = searchFields
+            .map(field => song[field] || "")
+            .join(" ")
+            .toLowerCase();
+
+        return searchable.includes(keyword);
+
+    });
+
+    selectedGroup = null;
+
+    renderAlbums(filtered);
+
+    renderSongs(
+        filtered,
+        "検索結果 (" + filtered.length + "件)"
+    );
+}
+
+// 文字を入力したら検索
+searchInput.addEventListener("input", filterSongs);
+
+// チェックを変更したら再検索
+document.querySelectorAll(".search-field").forEach(input => {
+
+    input.addEventListener("change", filterSongs);
+
+});
+
+// 検索欄の外をクリックしたら条件を閉じる
+document.addEventListener("click", function(event) {
+
+    if (!searchContainer.contains(event.target)) {
+        searchContainer.classList.remove("is-open");
+    }
+
+});
+
+
+// HTMLとして危険な文字を変換
+function escapeHTML(value) {
+
+    return String(value || "").replace(/[&<>"']/g, char => ({
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#039;"
+    })[char]);
+
+}
+
+
+// URLを確認
+function safeURL(value) {
+
+    try {
+        const url = new URL(value);
+
+        if (url.protocol === "https:" || url.protocol === "http:") {
+            return url.href;
+        }
+
+    } catch (error) {}
+
+    return "";
+
+}
+// ページを開いたときに自動読み込み
+loadCSV();
+</script>
+
+</body>
+</html>
